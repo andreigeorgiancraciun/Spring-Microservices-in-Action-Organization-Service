@@ -1,5 +1,6 @@
 package com.optimagrowth.organization.event.model;
 
+import com.optimagrowth.organization.model.Organization;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,6 +13,6 @@ import lombok.ToString;
 public class OrganizationChangeModel {
     private String type;
     private String action;
-    private String organizationId;
+    private Organization organization;
     private String correlationId;
 }

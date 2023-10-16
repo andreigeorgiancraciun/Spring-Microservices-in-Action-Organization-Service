@@ -29,25 +29,28 @@ public class OrganizationService {
                 UserContextHolder.getContext().getCorrelationId());
 
         Optional<Organization> opt = repository.findById(organizationId);
-        kafkaProducerService.publishOrganizationChange("GET", organizationId);
+        opt.ifPresent(organization -> kafkaProducerService.publishOrganizationChange("GET", organization));
         return opt.orElse(null);
     }
 
     public Organization create(Organization organization) {
         organization.setId(UUID.randomUUID().toString());
         organization = repository.save(organization);
-        kafkaProducerService.publishOrganizationChange("SAVE", organization.getId());
+        kafkaProducerService.publishOrganizationChange("SAVE", organization);
         return organization;
 
     }
 
     public void update(Organization organization) {
         repository.save(organization);
-        kafkaProducerService.publishOrganizationChange("UPDATE", organization.getId());
+        kafkaProducerService.publishOrganizationChange("UPDATE", organization);
     }
 
     public void delete(String organizationId) {
-        repository.deleteById(organizationId);
-        kafkaProducerService.publishOrganizationChange("DELETE", organizationId);
+        Optional<Organization> opt = repository.findById(organizationId);
+        if (opt.isPresent()) {
+            repository.deleteById(organizationId);
+            kafkaProducerService.publishOrganizationChange("DELETE", opt.get());
+        }
     }
 }

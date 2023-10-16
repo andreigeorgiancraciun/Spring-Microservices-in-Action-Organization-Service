@@ -1,6 +1,7 @@
 package com.optimagrowth.organization.event.service;
 
 import com.optimagrowth.organization.event.model.OrganizationChangeModel;
+import com.optimagrowth.organization.model.Organization;
 import com.optimagrowth.organization.utils.UserContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,12 +19,12 @@ public class KafkaProducerService {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public void publishOrganizationChange(String action, String organizationId) {
-        logger.debug("Sending Kafka message {} for Organization Id: {}", action, organizationId);
+    public void publishOrganizationChange(String action, Organization organization) {
+        logger.debug("Sending Kafka message {} for Organization Id: {}", action, organization.getId());
         OrganizationChangeModel change = new OrganizationChangeModel(
                 OrganizationChangeModel.class.getTypeName(),
                 action,
-                organizationId,
+                organization,
                 UserContextHolder.getContext().getCorrelationId());
 
         kafkaTemplate.send(TOPIC_NAME, change);
