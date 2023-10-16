@@ -1,4 +1,4 @@
-package com.optimagrowth.organization.service.utils;
+package com.optimagrowth.organization.utils;
 
 import lombok.experimental.UtilityClass;
 

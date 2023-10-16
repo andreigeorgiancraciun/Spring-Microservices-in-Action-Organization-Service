@@ -1,4 +1,4 @@
-package com.optimagrowth.organization.service.utils;
+package com.optimagrowth.organization.utils;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,12 +8,10 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+import static com.optimagrowth.organization.utils.UserContext.*;
+
 @Component
 public class UserContextFilter implements Filter {
-    private static final String CORRELATION_ID = "tmx-correlation-id";
-    private static final String AUTH_TOKEN = "tmx-auth-token";
-    private static final String USER_ID = "tmx-user-id";
-    private static final String ORGANIZATION_ID = "tmx-organization-id";
     private static final Logger logger = LoggerFactory.getLogger(UserContextFilter.class);
 
     @Override
@@ -27,8 +25,7 @@ public class UserContextFilter implements Filter {
         UserContextHolder.getContext().setAuthToken(httpServletRequest.getHeader(AUTH_TOKEN));
         UserContextHolder.getContext().setOrganizationId(httpServletRequest.getHeader(ORGANIZATION_ID));
 
-        logger.debug("UserContextFilter Correlation id: {}", UserContextHolder.getContext().getCorrelationId());
-
+        logger.debug("Organization Service Incoming Correlation id: {}", UserContextHolder.getContext().getCorrelationId());
         filterChain.doFilter(httpServletRequest, servletResponse);
     }
 }
